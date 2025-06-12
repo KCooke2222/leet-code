@@ -7,4 +7,4 @@ class Solution:
             maxP = max(maxP, sell - minBuy)
             minBuy = min(minBuy, sell)
             
-        return maxP
+        return maxPe
