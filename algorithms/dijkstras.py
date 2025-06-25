@@ -1,4 +1,6 @@
 """
+Chapter 7 Grokking - Dijkstras Alg
+
 Straight forward script for learning purposes
 """
 
