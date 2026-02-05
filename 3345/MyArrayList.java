@@ -1,9 +1,17 @@
+import java.util.NoSuchElementException;
+
+
 public class MyArrayList<AnyType> implements Iterable<AnyType> {
     private static final int DEFAULT_CAPACITY = 10;
 
     private int size;
     private AnyType[] arr;
     // use .length for capacity
+
+    public MyArrayList() {
+        size = 0;
+        arr = (AnyType[]) new Object[DEFAULT_CAPACITY];
+    }
 
     // Capacity
     private void changeCapacity(int newCapacity) {
@@ -19,15 +27,15 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
         arr = newArr;
     }
 
-    private int incCapacity(int mult = 2) {
-        newCapacity = arr.length * mult + 1;
+    private int incCapacity(int mult) {
+        int newCapacity = arr.length * mult + 1;
         changeCapacity(newCapacity);
         return newCapacity;
     }
 
     // List interface
     public AnyType get(int idx) {
-        if (idx < 0 || idx > size) {
+        if (idx < 0 || idx >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
@@ -35,7 +43,7 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
     }
 
     public AnyType set(int idx, AnyType newVal) {
-        if (idx < 0 || idx > size) {
+        if (idx < 0 || idx >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
@@ -51,7 +59,7 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
         }
 
         if (size + 1 > arr.length) {
-            incCapacity();
+            incCapacity(2);
         }
 
         for (int i = size - 1; i >= idx; i--) {
@@ -63,7 +71,7 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
     }
 
     public void remove(int idx) {
-        if (idx < 0 || idx > size) {
+        if (idx < 0 || idx >= size) {
             throw new ArrayIndexOutOfBoundsException();
         }
 
@@ -90,16 +98,14 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
     }
 
     public boolean contains(AnyType x) {
-        for (AnyType item : arr) {
-            if (item == x) {
-                return true;
-            }
+        for (int i = 0; i < size; i++) {
+            if (arr[i] == x) return true;
         }
         return false;
     }
 
     public boolean add(AnyType x) {
-        add(size + 1, x);
+        add(size, x);
         return true;
     }
 
@@ -115,4 +121,27 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
     public java.util.Iterator<AnyType> iterator() {
         return new ArrayListIterator();
     }
+
+    private class ArrayListIterator implements java.util.Iterator<AnyType> {
+        private int cur = 0;
+
+        public AnyType next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
+
+            return arr[cur++];
+        }
+
+        public boolean hasNext() {
+            if (cur < size) {
+                return true;
+            }
+            return false;
+        }
+
+        public void remove() {
+            MyArrayList.this.remove(--cur);
+        }
+    }
+
 }
